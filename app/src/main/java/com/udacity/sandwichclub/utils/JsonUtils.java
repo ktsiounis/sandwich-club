@@ -16,21 +16,33 @@ public class JsonUtils {
     public static Sandwich parseSandwichJson(String json) {
 
         String mainName;
-        List<String> alsoKnownAs = null;
+        List<String> alsoKnownAs = new ArrayList<>();
         String placeOfOrigin;
         String description;
         String image;
-        List<String> ingredients = null;
+        List<String> ingredients = new ArrayList<>();
 
         try {
             JSONObject jsonObj = new JSONObject(json);
             mainName = jsonObj.getJSONObject("name").get("mainName").toString();
-            //alsoKnownAs = jsonObj.getJSONObject("name").getJSONArray("alsoKnownAs");
+
+            JSONArray alsoKnownAsArray = jsonObj.getJSONObject("name").getJSONArray("alsoKnownAs");
+            for (int i=0; i<alsoKnownAsArray.length(); i++){
+                String subname = alsoKnownAsArray.getString(i);
+                alsoKnownAs.add(subname);
+            }
+
             placeOfOrigin = jsonObj.get("placeOfOrigin").toString();
             description = jsonObj.get("description").toString();
             image = jsonObj.get("image").toString();
-            //alsoKnownAs = jsonObj.getJSONObject("ingredients");
-            return new Sandwich(mainName,null,placeOfOrigin,description,image,null);
+
+            JSONArray ingredientsArray = jsonObj.getJSONArray("ingredients");
+            for (int i=0; i<ingredientsArray.length(); i++){
+                String ingredient = ingredientsArray.getString(i);
+                ingredients.add(ingredient);
+            }
+
+            return new Sandwich(mainName,alsoKnownAs,placeOfOrigin,description,image,ingredients);
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
