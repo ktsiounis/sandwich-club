@@ -15,7 +15,10 @@ public class DetailActivity extends AppCompatActivity {
 
     public static final String EXTRA_POSITION = "extra_position";
     private static final int DEFAULT_POSITION = -1;
-    TextView alsoKnownTV = (TextView) findViewById(R.id.also_known_tv);
+    private TextView alsoKnownTV;
+    private TextView descriptionTV;
+    private TextView originTV;
+    private TextView ingredientsTV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +26,10 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
 
         ImageView ingredientsIv = findViewById(R.id.image_iv);
+        alsoKnownTV = findViewById(R.id.also_known_tv);
+        descriptionTV = findViewById(R.id.description_tv);
+        originTV = findViewById(R.id.origin_tv);
+        ingredientsTV = findViewById(R.id.ingredients_tv);
 
         Intent intent = getIntent();
         if (intent == null) {
@@ -45,7 +52,7 @@ public class DetailActivity extends AppCompatActivity {
             return;
         }
 
-        populateUI();
+        populateUI(sandwich);
         Picasso.with(this)
                 .load(sandwich.getImage())
                 .into(ingredientsIv);
@@ -58,7 +65,34 @@ public class DetailActivity extends AppCompatActivity {
         Toast.makeText(this, R.string.detail_error_message, Toast.LENGTH_SHORT).show();
     }
 
-    private void populateUI() {
-        alsoKnownTV.setText("ALSO");
+    private void populateUI(Sandwich sandwich) {
+        String alsoKnownAsText = sandwich.getAlsoKnownAs().toString().substring(1,sandwich.getAlsoKnownAs().toString().length()-1);
+        String descriptionText = sandwich.getDescription();
+        String originText = sandwich.getPlaceOfOrigin();
+        String ingredientsText = sandwich.getIngredients().toString().substring(1,sandwich.getIngredients().toString().length()-1);
+
+        if (alsoKnownAsText.length() == 0){
+            alsoKnownTV.setText("-");
+        } else {
+            alsoKnownTV.setText(alsoKnownAsText);
+        }
+
+        if (descriptionText.length() == 0){
+            descriptionTV.setText("-");
+        } else {
+            descriptionTV.setText(descriptionText);
+        }
+
+        if (originText.length() == 0){
+            originTV.setText("-");
+        } else {
+            originTV.setText(originText);
+        }
+
+        if (ingredientsText.length() == 0){
+            ingredientsTV.setText("-");
+        } else {
+            ingredientsTV.setText(ingredientsText);
+        }
     }
 }
